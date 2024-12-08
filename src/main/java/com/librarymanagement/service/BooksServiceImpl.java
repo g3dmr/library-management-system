@@ -5,6 +5,7 @@ import com.librarymanagement.exception.BooksNotFoundException;
 import com.librarymanagement.exception.NoCopiesAvailableException;
 import com.librarymanagement.model.Book;
 import com.librarymanagement.model.BooksList;
+import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,9 @@ public class BooksServiceImpl implements BooksService {
      */
     @Override
     public BooksList findBookByAuthor(String author) {
+        if(null == author || StringUtils.isBlank(author)) {
+            throw new BooksNotFoundException("Author name is Empty or null.");
+        }
         logger.debug("Finding book by author :"+author);
         List<Book> bookList = booksMap.values().stream()
                 .filter(book -> book.getAuthor().equalsIgnoreCase(author))
@@ -68,6 +72,10 @@ public class BooksServiceImpl implements BooksService {
      */
     @Override
     public void addNewBook(Book book) {
+        if(book == null) {
+            throw new BooksNotFoundException("Not a valid book details.");
+        }
+        validateISBN(book.getIsbn());
         if(booksMap.containsKey(book.getIsbn())) {
             throw new BooksNotFoundException("Duplicate ISBN, Try with another ISBN no. ");
         } else {
@@ -77,7 +85,12 @@ public class BooksServiceImpl implements BooksService {
 
     @Override
     public void removeBook(String isbn) {
-        booksMap.remove(isbn);
+        validateISBN(isbn);
+        if(booksMap.containsKey(isbn)) {
+            booksMap.remove(isbn);
+        } else {
+            throw new BooksNotFoundException("ISBN is not found in the library.");
+        }
     }
 
     /**
@@ -87,6 +100,7 @@ public class BooksServiceImpl implements BooksService {
      */
     @Override
     public synchronized boolean borrowBook(String isbn) {
+        validateISBN(isbn);
         Optional<Book> book = Optional.ofNullable(booksMap.get(isbn));
         return book.filter(bk -> bk.getAvailableCopies() > 0)
             .map(bk ->  {
@@ -97,6 +111,12 @@ public class BooksServiceImpl implements BooksService {
             });
     }
 
+    public void validateISBN(String isbn) {
+        if( isbn == null || StringUtils.isBlank(isbn)) {
+            throw new BooksNotFoundException("Not a valid ISBN number.");
+        }
+    }
+
     /**
      * Returning a borrowed book which increases the number of available copies by 1
      * @param isbn
@@ -104,6 +124,7 @@ public class BooksServiceImpl implements BooksService {
      */
     @Override
     public synchronized boolean returnBook(String isbn) {
+        validateISBN(isbn);
         Optional<Book> book = Optional.ofNullable(booksMap.get(isbn));
         return book.map(bk -> {
                 bk.setAvailableCopies(bk.getAvailableCopies() + 1);
