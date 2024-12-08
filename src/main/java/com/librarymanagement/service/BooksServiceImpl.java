@@ -77,7 +77,7 @@ public class BooksServiceImpl implements BooksService {
     }
 
     /**
-     * This is static data for initial testing
+     * This is static data for initial testing purpose only
      * @return
      */
     public ConcurrentHashMap<String, Book> loadBooksData() {
