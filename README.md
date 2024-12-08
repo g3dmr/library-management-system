@@ -21,7 +21,7 @@ Library Management is a Spring Boot application designed to manage library opera
 
 ## Getting Started
 
-### Clone the repository
+### Clone the repository (using ssh)
 ```
 git clone git@github.com:g3dmr/library-management-system.git
 cd library-management-system
@@ -50,6 +50,11 @@ The application will be accessible at `http://localhost:8080`
 
 - Description : Login service to authenticate user
 - Response: `200 OK` with authorization value
+
+**Endpoint**
+
+**Request**
+
 ```
 curl --location 'http://localhost:8080/auth/login' \
   --header 'Content-Type: application/json' \
@@ -63,6 +68,10 @@ curl --location 'http://localhost:8080/auth/login' \
 - Description: Add a new book.
 - Request Body: Book details in JSON format.
 - Response: `200 OK` with a success message, `400 Bad Request` if the book already exists. 
+
+**Endpoint**
+
+**Request**
 
 ```
 curl --location 'http://localhost:8080/api/v1/books/newbook' \
@@ -105,36 +114,67 @@ curl --location 'http://localhost:8090/api/v1/books/isbn/12' \
 - Description: Retrieve books by author name.
 - Response: `200 OK` with a list of books, `404 Not Found` if no books are found for the given author.
 
+**Endpoint**
+
+**Request**
+
 ```
 http://localhost:8080/api/v1/books/find/author/Summer
 ```
+
+**Response**
 
 #### DELETE /api/v1/books/delete/{isbn}
 - Description: Remove a book by ISBN.
 - Response: `200 OK` with a success message.
 
+**Endpoint**
+
+**Request**
+
 ```
 http://localhost:8080/api/v1/books/delete/{isbn}
 ```
+**Response**
+
 #### Borrow Book: /api/v1/books/borrow/{isbn}
 - Description: Borrow a book by ISBN only if exists already else error will be thrown.
 - Response: `200 OK` with a success message, `400 Bad Request` if no copies are available.
+
+**Endpoint**
+
+**Request**
+
 ```
 http://localhost:8080/api/v1/books/borrow/{isbn}
 ```
+**Response**
+
 #### Return Book: (/api/v1/books/return/{isbn})
 - Description: Return a borrowed book by ISBN.
 - Response: `200 OK` with a success message.
+
+**Endpoint**
+
+**Request**
+
 ```
 http://localhost:8080/api/v1/books/return/{isbn}
 ```
+**Response**
 
 #### GET /api/v1/books/clearcache
 - Description: Clear the cache.
 - Response: `200 OK` with a success message.
+
+**Endpoint**
+
+**Request**
+
 ```
 http://localhost:8080/api/v1/books/clearcache
 ```
+**Response**
 
 #### Rate Limiting Fallback
 - Description: Handles rate limiting when the request limit is exceeded.
