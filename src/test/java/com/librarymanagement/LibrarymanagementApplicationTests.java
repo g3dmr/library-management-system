@@ -44,8 +44,8 @@ class LibrarymanagementApplicationTests {
 
 	private LoginRequest loginData() {
 		LoginRequest loginRequest = new LoginRequest();
-		loginRequest.setUserName("wedwewe");
-		loginRequest.setPassword("12121");
+		loginRequest.setUserName("librarytestuser");
+		loginRequest.setPassword("lib123rary");
 		return loginRequest;
 	}
 
