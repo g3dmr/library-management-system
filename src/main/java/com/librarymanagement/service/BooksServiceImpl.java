@@ -11,6 +11,15 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ *    - addNewBook(Book book): Adds a new book to the library
+ *    - removeBook(String isbn): Removes a book from the library by ISBN
+ *    - findBookByISBN(String isbn): Returns a book by its ISBN
+ *    - findBooksByAuthor(String author): Returns a list of books by a given author
+ *    - borrowBook(String isbn): Decreases the available copies of a book by 1
+ *    - returnBook(String isbn): Increases the available copies of a book by 1
+ */
+
 @Service
 public class BooksServiceImpl implements BooksService {
 
@@ -27,6 +36,11 @@ public class BooksServiceImpl implements BooksService {
         return book.orElseThrow(() -> new BooksNotFoundException("Book (" +isbn+ ") Not found"));
     }
 
+    /**
+     * Find the book from given author name
+     * @param author
+     * @return
+     */
     @Override
     public BooksList findBookByAuthor(String author) {
         List<Book> bookList = booksMap.values().stream()
@@ -40,6 +54,11 @@ public class BooksServiceImpl implements BooksService {
         return books;
     }
 
+    /**
+     * Add a new book, ISBN should be unique, if already exists in the library
+     * return the exception
+     * @param book
+     */
     @Override
     public void addNewBook(Book book) {
         if(booksMap.containsKey(book.getIsbn())) {
@@ -54,6 +73,11 @@ public class BooksServiceImpl implements BooksService {
         booksMap.remove(isbn);
     }
 
+    /**
+     * Borrow a book which reduced the number of available copies by 1
+     * @param isbn
+     * @return
+     */
     @Override
     public synchronized boolean borrowBook(String isbn) {
         Optional<Book> book = Optional.ofNullable(booksMap.get(isbn));
@@ -66,6 +90,11 @@ public class BooksServiceImpl implements BooksService {
             });
     }
 
+    /**
+     * Returning a borrowed book which increases the number of available copies by 1
+     * @param isbn
+     * @return boolean
+     */
     @Override
     public synchronized boolean returnBook(String isbn) {
         Optional<Book> book = Optional.ofNullable(booksMap.get(isbn));
