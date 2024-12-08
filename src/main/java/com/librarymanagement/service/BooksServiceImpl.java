@@ -1,9 +1,12 @@
 package com.librarymanagement.service;
 
+import com.librarymanagement.controller.BooksController;
 import com.librarymanagement.exception.BooksNotFoundException;
 import com.librarymanagement.exception.NoCopiesAvailableException;
 import com.librarymanagement.model.Book;
 import com.librarymanagement.model.BooksList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +26,8 @@ import java.util.stream.Collectors;
 @Service
 public class BooksServiceImpl implements BooksService {
 
+    private static final Logger logger = LoggerFactory.getLogger(BooksServiceImpl.class);
+
     ConcurrentHashMap<String, Book> booksMap = new ConcurrentHashMap<>();
 
     public BooksServiceImpl() {
@@ -32,6 +37,7 @@ public class BooksServiceImpl implements BooksService {
 
     @Override
     public Book findBookByISBN(String isbn) {
+        logger.debug("Finding book ISBN :"+isbn);
         Optional<Book> book = Optional.ofNullable(booksMap.get(isbn));
         return book.orElseThrow(() -> new BooksNotFoundException("Book (" +isbn+ ") Not found"));
     }
@@ -43,6 +49,7 @@ public class BooksServiceImpl implements BooksService {
      */
     @Override
     public BooksList findBookByAuthor(String author) {
+        logger.debug("Finding book by author :"+author);
         List<Book> bookList = booksMap.values().stream()
                 .filter(book -> book.getAuthor().equalsIgnoreCase(author))
                 .collect(Collectors.toUnmodifiableList());
