@@ -73,8 +73,10 @@ public class BooksServiceImplTest {
 
     @Test
     public void testRemoveBook() {
-        service.removeBook("AA111");
-        verify(booksMap, times(1)).remove("AA111");
+        BooksNotFoundException exp = assertThrows(BooksNotFoundException.class, () -> {
+            service.removeBook("AA111");
+        });
+        assertEquals("ISBN is not found in the library.", exp.getMessage());
     }
 
     @Test
