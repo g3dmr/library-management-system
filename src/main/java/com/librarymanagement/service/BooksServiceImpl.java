@@ -15,12 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- *    - addNewBook(Book book): Adds a new book to the library
- *    - removeBook(String isbn): Removes a book from the library by ISBN
- *    - findBookByISBN(String isbn): Returns a book by its ISBN
- *    - findBooksByAuthor(String author): Returns a list of books by a given author
- *    - borrowBook(String isbn): Decreases the available copies of a book by 1
- *    - returnBook(String isbn): Increases the available copies of a book by 1
+ * - addNewBook(Book book): Adds a new book to the library
+ * - removeBook(String isbn): Removes a book from the library by ISBN
+ * - findBookByISBN(String isbn): Returns a book by its ISBN
+ * - findBooksByAuthor(String author): Returns a list of books by a given author
+ * - borrowBook(String isbn): Decreases the available copies of a book by 1
+ * - returnBook(String isbn): Increases the available copies of a book by 1
  */
 
 @Service
@@ -37,6 +37,7 @@ public class BooksServiceImpl implements BooksService {
 
     @Override
     public Book findBookByISBN(String isbn) {
+        validateISBN(isbn);
         logger.debug("Finding book ISBN :"+isbn);
         Optional<Book> book = Optional.ofNullable(booksMap.get(isbn));
         return book.orElseThrow(() -> new BooksNotFoundException("Book (" +isbn+ ") Not found"));
@@ -102,12 +103,12 @@ public class BooksServiceImpl implements BooksService {
         validateISBN(isbn);
         Optional<Book> book = Optional.ofNullable(booksMap.get(isbn));
         return book.filter(bk -> bk.getAvailableCopies() > 0)
-            .map(bk ->  {
-                bk.setAvailableCopies(bk.getAvailableCopies() - 1);
-                return true;
-            }).orElseGet(() -> {
-                throw new NoCopiesAvailableException("No available copies for book with ISBN " + isbn + ".");
-            });
+                .map(bk -> {
+                    bk.setAvailableCopies(bk.getAvailableCopies() - 1);
+                    return true;
+                }).orElseGet(() -> {
+                    throw new NoCopiesAvailableException("No available copies for book with ISBN " + isbn + ".");
+                });
     }
 
     public void validateISBN(String isbn) {
@@ -126,10 +127,10 @@ public class BooksServiceImpl implements BooksService {
         validateISBN(isbn);
         Optional<Book> book = Optional.ofNullable(booksMap.get(isbn));
         return book.map(bk -> {
-                bk.setAvailableCopies(bk.getAvailableCopies() + 1);
-                return true;
-            })
-            .orElse(false);
+                    bk.setAvailableCopies(bk.getAvailableCopies() + 1);
+                    return true;
+                })
+                .orElse(false);
     }
 
     /**
@@ -143,7 +144,7 @@ public class BooksServiceImpl implements BooksService {
         Book book2 = new Book("BB222", "Arrival", "Winter", 2000,10);
         booksMap.put("BB222", book2);
 
-        Book book3 = new Book("CC333","Parkinson","Season",  2010, 20);
+        Book book3 = new Book("CC333","Parkinson","Season", 2010, 20);
         booksMap.put("CC333", book3);
     }
 }
