@@ -151,6 +151,7 @@ public class BooksServiceImplTest {
     @Test
     public void testBorrowBook() {
         Book book1 = new Book("AA111", "Arrival", "Summer", 1995, 15);
+        when(booksMap.containsKey("AA111")).thenReturn(true);
         when(booksMap.get("AA111")).thenReturn(book1);
 
         boolean status = service.borrowBook("AA111");
@@ -161,6 +162,7 @@ public class BooksServiceImplTest {
     @Test
     public void testBorrowBookForZeroCopies() {
         Book book1 = new Book("AA111", "Arrival", "Summer", 1995, 0);
+        when(booksMap.containsKey("AA111")).thenReturn(true);
         when(booksMap.get("AA111")).thenReturn(book1);
 
         NoCopiesAvailableException exp = assertThrows(NoCopiesAvailableException.class, () -> {
@@ -172,10 +174,31 @@ public class BooksServiceImplTest {
     @Test
     public void testReturnBook() {
         Book book1 = new Book("AA111", "Arrival", "Summer", 1995, 15);
+        when(booksMap.containsKey("AA111")).thenReturn(true);
         when(booksMap.get("AA111")).thenReturn(book1);
 
         boolean status = service.returnBook("AA111");
         assertTrue(status);
         assertEquals(16, book1.getAvailableCopies());
+    }
+
+    @Test
+    public void testBorrowBookNotFound() {
+        when(booksMap.containsKey("AA111")).thenReturn(false);
+
+        BooksNotFoundException exp = assertThrows(BooksNotFoundException.class, () -> {
+            service.borrowBook("AA111");
+        });
+        assertEquals("Book (AA111) Not found", exp.getMessage());
+    }
+
+    @Test
+    public void testReturnBookNotFound() {
+        when(booksMap.containsKey("AA111")).thenReturn(false);
+
+        BooksNotFoundException exp = assertThrows(BooksNotFoundException.class, () -> {
+            service.returnBook("AA111");
+        });
+        assertEquals("Book (AA111) Not found", exp.getMessage());
     }
 }
