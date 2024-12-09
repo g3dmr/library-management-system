@@ -56,7 +56,7 @@ public class BooksServiceImpl implements BooksService {
         logger.debug("Finding book by author :"+author);
         List<Book> bookList = booksMap.values().stream()
                 .filter(book -> book.getAuthor().equalsIgnoreCase(author))
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
         if(bookList.isEmpty()) {
             throw new BooksNotFoundException("Book Not found for given author");
         }
