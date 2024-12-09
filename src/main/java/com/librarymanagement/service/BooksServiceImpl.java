@@ -102,6 +102,9 @@ public class BooksServiceImpl implements BooksService {
     public synchronized boolean borrowBook(String isbn) {
         validateISBN(isbn);
         Optional<Book> book = Optional.ofNullable(booksMap.get(isbn));
+        if(!booksMap.containsKey(isbn)) {
+            throw new BooksNotFoundException("Book (" +isbn+ ") Not found");
+        }
         return book.filter(bk -> bk.getAvailableCopies() > 0)
                 .map(bk -> {
                     bk.setAvailableCopies(bk.getAvailableCopies() - 1);
@@ -111,7 +114,7 @@ public class BooksServiceImpl implements BooksService {
                 });
     }
 
-    public void validateISBN(String isbn) {
+    private void validateISBN(String isbn) {
         if( isbn == null || StringUtils.isBlank(isbn)) {
             throw new BooksNotFoundException("Not a valid ISBN number.");
         }
@@ -126,6 +129,9 @@ public class BooksServiceImpl implements BooksService {
     public synchronized boolean returnBook(String isbn) {
         validateISBN(isbn);
         Optional<Book> book = Optional.ofNullable(booksMap.get(isbn));
+        if(!booksMap.containsKey(isbn)) {
+            throw new BooksNotFoundException("Book (" +isbn+ ") Not found");
+        }
         return book.map(bk -> {
                     bk.setAvailableCopies(bk.getAvailableCopies() + 1);
                     return true;
