@@ -42,7 +42,7 @@ mvn test
 mvn spring-boot:run
 ```
 
-The application will be accessible at `http://localhost:8080`
+The application will be accessible at `http://localhost:8080` along with authorisation header
 
 ## Endpoints
 
@@ -52,7 +52,9 @@ The application will be accessible at `http://localhost:8080`
 - Response: `200 OK` with authorization value
 
 **Endpoint**
-
+```
+http://localhost:8080/auth/login
+```
 **Request**
 
 ```
@@ -70,6 +72,9 @@ curl --location 'http://localhost:8080/auth/login' \
 - Response: `200 OK` with a success message, `400 Bad Request` if the book already exists. 
 
 **Endpoint**
+```
+http://localhost:8080/api/v1/books/newbook
+```
 
 **Request**
 
@@ -92,7 +97,7 @@ curl --location 'http://localhost:8080/api/v1/books/newbook' \
 
 **Endpoint**
 ```
-http://localhost:8080/api/v1/books/find/isbn/AA111
+http://localhost:8080/api/v1/books/find/isbn/{isbn}
 ```
 **Request**
 
@@ -116,10 +121,8 @@ curl --location 'http://localhost:8090/api/v1/books/isbn/12' \
 
 **Endpoint**
 
-**Request**
-
 ```
-http://localhost:8080/api/v1/books/find/author/Summer
+http://localhost:8080/api/v1/books/find/author/{authorName}
 ```
 
 **Response**
@@ -129,8 +132,6 @@ http://localhost:8080/api/v1/books/find/author/Summer
 - Response: `200 OK` with a success message.
 
 **Endpoint**
-
-**Request**
 
 ```
 http://localhost:8080/api/v1/books/delete/{isbn}
@@ -143,8 +144,6 @@ http://localhost:8080/api/v1/books/delete/{isbn}
 
 **Endpoint**
 
-**Request**
-
 ```
 http://localhost:8080/api/v1/books/borrow/{isbn}
 ```
@@ -155,8 +154,6 @@ http://localhost:8080/api/v1/books/borrow/{isbn}
 - Response: `200 OK` with a success message.
 
 **Endpoint**
-
-**Request**
 
 ```
 http://localhost:8080/api/v1/books/return/{isbn}
@@ -169,8 +166,6 @@ http://localhost:8080/api/v1/books/return/{isbn}
 
 **Endpoint**
 
-**Request**
-
 ```
 http://localhost:8080/api/v1/books/clearcache
 ```
@@ -179,7 +174,6 @@ http://localhost:8080/api/v1/books/clearcache
 #### Rate Limiting Fallback
 - Description: Handles rate limiting when the request limit is exceeded.
 - Response: `429 Too Many Requests` with a retry header.
-
 
 ### Notes :-
 - For demonstration purpose, repository includes sample data added (ISBNs: AA111, BB222, CC333) directly within the service class.

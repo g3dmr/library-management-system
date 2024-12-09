@@ -48,6 +48,22 @@ public class BooksServiceImplTest {
     }
 
     @Test
+    public void testFindBookByAuthorEmptyName() {
+        BooksNotFoundException exp = assertThrows(BooksNotFoundException.class, () -> {
+            service.findBookByAuthor("");
+        });
+        assertEquals("Author name is Empty or null.", exp.getMessage());
+    }
+
+    @Test
+    public void testFindBookByAuthorNameNull() {
+        BooksNotFoundException exp = assertThrows(BooksNotFoundException.class, () -> {
+            service.findBookByAuthor("");
+        });
+        assertEquals("Author name is Empty or null.", exp.getMessage());
+    }
+
+    @Test
     public void testFindBookByAuthorNotAvailable() {
         BooksNotFoundException exp = assertThrows(BooksNotFoundException.class, () -> {
             service.findBookByAuthor("Winter12");
@@ -72,9 +88,26 @@ public class BooksServiceImplTest {
     }
 
     @Test
+    public void testAddBookAsNull() {
+        BooksNotFoundException exp = assertThrows(BooksNotFoundException.class, () -> {
+            service.addNewBook(null);
+        });
+        assertEquals("Not a valid book details.", exp.getMessage());
+    }
+
+    @Test
+    public void testAddBookAsNullISBN() {
+        Book newBook = new Book(null, "New Book", "New Season", 2024,50);
+        BooksNotFoundException exp = assertThrows(BooksNotFoundException.class, () -> {
+            service.addNewBook(newBook);
+        });
+        assertEquals("Not a valid ISBN number.", exp.getMessage());
+    }
+
+    @Test
     public void testRemoveBook() {
         BooksNotFoundException exp = assertThrows(BooksNotFoundException.class, () -> {
-            service.removeBook("AA111");
+            service.removeBook("AA12345");
         });
         assertEquals("ISBN is not found in the library.", exp.getMessage());
     }

@@ -1,6 +1,5 @@
 package com.librarymanagement.service;
 
-import com.librarymanagement.controller.BooksController;
 import com.librarymanagement.exception.BooksNotFoundException;
 import com.librarymanagement.exception.NoCopiesAvailableException;
 import com.librarymanagement.model.Book;
@@ -33,7 +32,7 @@ public class BooksServiceImpl implements BooksService {
 
     public BooksServiceImpl() {
         //Loading this temporarily.
-        booksMap = loadBooksData();
+        loadBooksData();
     }
 
     @Override
@@ -137,7 +136,7 @@ public class BooksServiceImpl implements BooksService {
      * This is static data for initial testing purpose only
      * @return
      */
-    public ConcurrentHashMap<String, Book> loadBooksData() {
+    public void loadBooksData() {
         Book book1 = new Book("AA111", "Arrival","Summer", 1995, 15);
         booksMap.put("AA111", book1);
 
@@ -146,7 +145,5 @@ public class BooksServiceImpl implements BooksService {
 
         Book book3 = new Book("CC333","Parkinson","Season",  2010, 20);
         booksMap.put("CC333", book3);
-
-        return booksMap;
     }
 }
